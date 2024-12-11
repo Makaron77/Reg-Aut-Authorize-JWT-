@@ -6,6 +6,7 @@ const cors = require('cors'); //npm install cors - Установить!!!
 require('dotenv').config(); // Подключение переменных окружения из .env
 const dbCheck = require('./db/dbCheck'); // Подключаем файл для проверки соединения с БД
 const router = require('./router/index')
+const errorMiddleware = require('./middlewares/errorMiddleware')
 // Запуск проверки соединения с базой данных
 dbCheck();
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true })); // Для обработки UR
 app.use('/api', router);
 // Статические файлы
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(errorMiddleware);
 
 // Запуск сервера
 app.listen(PORT, () => {
