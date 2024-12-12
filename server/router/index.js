@@ -34,15 +34,4 @@ router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.users);
 
 module.exports = router;
-// {
-//   status: 400,
-//   errors: [
-//     {
-//       type: 'field',
-//       value: 'makasika47@gmail.com12334435',
-//       msg: 'Некорректный формат электронной почты',
-//       path: 'email',
-//       location: 'body'
-//     }
-//   ]
-// }
+

@@ -3,7 +3,7 @@ const { Token } = require('../db/models');
 //! функция генерации access и refresh токенов
 exports.generateTokens = (payload) => {
 	const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-		expiresIn: '30m', // время жизни токена можно указать часы, минуты и секунды
+		expiresIn: '30s', // время жизни токена можно указать часы, минуты и секунды
 	}); //* acessToken вернет JWT токен(строку)
 	//* Эта строка состоит из трех частей, разделенных точками (.):
 
@@ -11,7 +11,7 @@ exports.generateTokens = (payload) => {
   //*  - Payload: Содержит данные, которые вы передали (например, payload).
   //*  - Signature: Это подпись, созданная на основе Header, Payload и секретного ключа.
 	const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-		expiresIn: '30d',
+		expiresIn: '30m',
 	});//* Так же возвращает аналогичный но другой рефреш токен, обычной другим временем жизни и секретный	 ключ отдельный берется из .env
 	return {
 		accessToken,
@@ -23,8 +23,10 @@ exports.generateTokens = (payload) => {
 exports.validateAccessToken = (token) => {
     try {
         //* Пытаемся расшифровать токен с использованием секретного ключа для access токенов.
-        //* jwt.verify() проверяет подпись и срок действия токена.
-		return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+			//* jwt.verify() проверяет подпись и срок действия токена.
+			return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+			
+			
 	} catch (e) {
 		//* Если токен недействителен или истек, возвращаем null
 		return null;
@@ -62,12 +64,12 @@ exports.saveToken = async (user_id, refreshToken) => {
 //! Функция для удаления refresh токена из базы данных
 exports.removeToken = async (refreshToken) => {
 	//* Удаляем запись с данным refreshToken из базы данных
-	return Token.destroy({ refreshToken });
+	return Token.destroy({ where: { refreshToken } });
 };
 
 //! Функция для нахождения записи с данным refresh токеном в базе данных
 exports.findToken = async (refreshToken) => {
 	//* Ищем запись с данным refreshToken в базе данных
-	return Token.findOne({ refreshToken });
+	return Token.findOne({where:{ refreshToken }});
 }
 

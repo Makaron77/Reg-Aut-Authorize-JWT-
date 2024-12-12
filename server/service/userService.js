@@ -112,7 +112,7 @@ exports.refreshService = async refreshToken => {
 	}
 
 	// Ищем пользователя по ID, извлеченному из токена
-	const user = await User.findById(userData.id);
+	const user = await User.findByPk(userData.id);
 	// Создаем DTO для фильтрации данных пользователя
 	const userDto = createUserDto(user);
 	// Генерируем новые токены
@@ -127,5 +127,7 @@ exports.refreshService = async refreshToken => {
 //! Получение всех пользователей (административная функция)
 exports.getAllUsersService = async () => {
 	// Находим и возвращаем всех пользователей из БД
-	return User.find();
+	return User.findAll();
 };
+
+
